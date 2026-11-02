@@ -37,7 +37,7 @@ function home(){
    cont+
    '<h2>Hindi dub</h2><div class="row">'+hi.slice(0,12).map(card).join("")+'</div>'+
    '<h2>English sub</h2><div class="row">'+en.slice(0,12).map(card).join("")+'</div>'+
-   '<div class="btns"><a class="btn ghost" href="#/browse">Saari series dekho →</a></div>'+
+   '<div class="btns"><a class="btn ghost" href="#/browse">Saari series dekho →</a><a class="btn ghost" href="#/creator">Creator Anime 🔥</a></div>'+
    '<h2>Coming soon</h2><ul class="muted soon"><li>Release schedule (naye episodes kab aayenge)</li><li>Ratings &amp; reviews</li></ul>';
 }
 
@@ -97,11 +97,53 @@ function kahan(q){
   i.addEventListener("input",d); d();
 }
 
+/* ---- Creator Anime ---- */
+var CR=window.HX_CREATOR||{series:[],channels:{}}, crById={}; CR.series.forEach(function(s){crById[s.id]=s;});
+function fmtSubs(n){return n>=1e6?(n/1e6).toFixed(n>=1e7?0:1).replace(/\.0$/,"")+"M":n>=1e3?(n/1e3).toFixed(n>=1e5?0:1).replace(/\.0$/,"")+"K":String(n);}
+function crGroup(s){return s.tag==="AI anime"?"ai":/Indian/.test(s.tag)?"in":"tr";}
+var CR_NOTE='<p class="note crnote">Original creator content, embedded from their own YouTube channels. All rights with the creators.</p>';
+function crCredit(s){var c=CR.channels[s.ch];
+  return '<a class="credit" target="_blank" rel="noopener" href="'+esc(c.url)+'">▶ Watch on creator\'s channel</a>';}
+function crCard(s){var c=CR.channels[s.ch];
+  return '<div class="card crcard"><a class="crthumb" href="#/creator/'+encodeURIComponent(s.id)+'/1"><img loading="lazy" alt="" src="'+thumb(s.eps[0][0])+'" width="320" height="180"></a>'+
+  '<div class="b"><a class="n" href="#/creator/'+encodeURIComponent(s.id)+'/1">'+esc(s.name)+'</a>'+
+  '<div class="m"><span class="tag'+(crGroup(s)==="ai"?" ai":"")+'">'+esc(s.tag)+'</span><span>'+s.eps.length+(s.eps.length===1?' video':' videos')+'</span><span>'+esc(s.lang)+'</span></div>'+
+  '<div class="by">by <strong>'+esc(c.name)+'</strong> · '+fmtSubs(c.subs)+' subs</div>'+crCredit(s)+'</div></div>';}
+function creator(){
+  setNav("creator");
+  var st=LS.get("hx_cr","all");
+  main.innerHTML='<h1>Creator Anime 🔥</h1><p class="muted" style="margin:0">YouTubers ke khud ke banaye anime + AI anime. '+CR.series.length+' series, '+CR.series.reduce(function(n,s){return n+s.eps.length;},0)+' videos.</p>'+CR_NOTE+
+   '<div class="chips" role="group" aria-label="Creator filter" style="margin:12px 0">'+
+   [["all","Sab"],["in","Indian 🇮🇳"],["ai","AI anime"],["tr","Trending"]].map(function(c){return '<button type="button" class="chip" data-cr="'+c[0]+'" aria-pressed="'+(st===c[0])+'">'+c[1]+'</button>';}).join("")+
+   '</div><div class="grid crgrid" id="crgrid"></div>';
+  function draw(){document.getElementById("crgrid").innerHTML=CR.series.filter(function(s){return st==="all"||crGroup(s)===st;}).map(crCard).join("");LS.set("hx_cr",st);}
+  [].forEach.call(main.querySelectorAll("[data-cr]"),function(b){b.addEventListener("click",function(){st=b.getAttribute("data-cr");
+    [].forEach.call(main.querySelectorAll("[data-cr]"),function(x){x.setAttribute("aria-pressed",String(x===b));});draw();});});
+  draw();
+}
+function crWatch(id,ep){
+  setNav("creator");
+  var s=crById[id]; if(!s){main.innerHTML='<div class="empty">Series nahi mili. <a href="#/creator">Creator Anime</a></div>';return;}
+  var c=CR.channels[s.ch];
+  ep=Math.min(Math.max(parseInt(ep,10)||1,1),s.eps.length); var e=s.eps[ep-1];
+  document.title=s.name+" · "+e[1]+" · HEYYANIXX Anime";
+  main.innerHTML='<p style="margin:0 0 10px"><a href="#/creator">← Creator Anime</a></p>'+
+   '<div class="player"><iframe id="yt" src="https://www.youtube-nocookie.com/embed/'+e[0]+'?rel=0&playsinline=1" title="'+esc(e[1])+'" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>'+
+   '<h1 style="font-size:22px;margin-top:12px">'+esc(s.name)+'</h1><p class="muted" style="margin:0">'+esc(e[1])+' · '+esc(e[2])+'</p>'+
+   '<div class="box crbox"><div>Made by <strong>'+esc(c.name)+'</strong> ('+esc(c.handle)+') · '+fmtSubs(c.subs)+' subscribers</div><p class="note" style="margin:4px 0 8px">'+esc(s.blurb)+'</p>'+
+   '<div class="links">'+crCredit(s)+'<a class="btn ghost" target="_blank" rel="noopener" href="https://www.youtube.com/watch?v='+e[0]+'">YouTube pe kholo</a></div></div>'+
+   '<div class="pager">'+(ep>1?'<a class="btn ghost" href="#/creator/'+encodeURIComponent(id)+'/'+(ep-1)+'">← Pichla</a>':'<span></span>')+
+   (ep<s.eps.length?'<a class="btn" href="#/creator/'+encodeURIComponent(id)+'/'+(ep+1)+'">Agla →</a>':'<span></span>')+'</div>'+
+   '<h2>Videos ('+s.eps.length+')</h2><ul class="eplist">'+s.eps.map(function(x,i){return '<li><a href="#/creator/'+encodeURIComponent(id)+'/'+(i+1)+'"'+(i+1===ep?' aria-current="true"':'')+'><span class="no">'+(i+1)+'</span><span class="tt">'+esc(x[1])+' <span class="muted">· '+esc(x[2])+'</span></span></a></li>';}).join("")+'</ul>'+
+   (s.eps.length<3?'<p class="note">Baaki episodes creator ke channel pe dekho (kuch videos creator ne embed ke liye band rakhe hain).</p>':'')+CR_NOTE;
+}
+
 function route(){
   var h=decodeURIComponent(location.hash.replace(/^#\/?/,"")), p=h.split("/");
   if(p[0]==="browse")browse(); else if(p[0]==="watch")watch(p[1],p[2]); else if(p[0]==="watchlist")watchlist();
+  else if(p[0]==="creator"){if(p[1])crWatch(p[1],p[2]);else creator();}
   else if(p[0]==="kahan-dekhe")kahan(p.slice(1).join("/")); else home();
-  if(p[0]!=="watch")document.title="HEYYANIXX Anime: free & legal anime, Hindi dub";
+  if(p[0]!=="watch"&&!(p[0]==="creator"&&p[1]))document.title="HEYYANIXX Anime: free & legal anime, Hindi dub";
   window.scrollTo(0,0);
 }
 document.addEventListener("click",function(ev){var b=ev.target.closest("[data-wl]");if(!b)return;
