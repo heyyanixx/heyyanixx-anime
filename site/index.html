@@ -21,6 +21,11 @@
     <a href="#/watchlist" data-nav="watchlist">Watchlist</a>
     <a href="#/kahan-dekhe" data-nav="kahan">Kahan dekhe</a>
   </nav>
+  <form class="gs" id="gs" role="search" autocomplete="off" onsubmit="return false">
+    <label for="gq" class="vh">Search anime</label>
+    <input id="gq" class="gsin" type="search" placeholder="🔍 Search: Titan, JoJo, Vardaan…" enterkeyhint="search" aria-controls="gres" aria-expanded="false">
+    <div id="gres" class="gres" role="listbox" hidden></div>
+  </form>
 </header>
 <main id="main" tabindex="-1"></main>
 <footer class="foot">
@@ -31,6 +36,7 @@
 </footer>
 <script src="data.js"></script>
 <script src="creator.js"></script>
+<script src="shows.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

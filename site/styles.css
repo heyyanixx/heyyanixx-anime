@@ -72,3 +72,29 @@ h2{font-size:19px;margin-top:26px}
 .credit{font-size:12px;font-weight:700;color:var(--gold);text-decoration:none;margin-top:2px}
 .tag.ai{background:#14121f;color:#cdbbff;border-color:#33295a}
 .crbox .credit{display:inline-flex;align-items:center;min-height:44px;border:1px solid var(--gold);border-radius:10px;padding:0 14px;font-size:15px}
+
+/* v3: search, seasons, audio, subtitles */
+.vh{position:absolute;left:-999px;width:1px;height:1px;overflow:hidden}
+.gs{position:relative;margin:2px 0 10px}
+.gsin{width:100%;background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;font-size:16px}
+.gsin:focus{border-color:var(--gold);outline:none}
+.gres{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#0d0d12;border:1px solid var(--line);border-radius:12px;max-height:65vh;overflow:auto;box-shadow:0 12px 30px rgba(0,0,0,.6);z-index:6}
+.gres a{display:flex;gap:10px;align-items:center;padding:8px 10px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--line)}
+.gres a:last-child{border-bottom:0}
+.gres a.sel,.gres a:hover{background:#1a160c}
+.gres img{width:72px;aspect-ratio:16/9;object-fit:cover;border-radius:6px;flex:0 0 auto;background:#1a1a20}
+.gres .t{font-weight:700;font-size:14px;line-height:1.25}
+.gres .s{font-size:12px;color:var(--muted)}
+.gres .h{padding:6px 10px;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--gold);text-transform:uppercase;background:#0a0a0e}
+.gres .none{padding:12px 10px;color:var(--muted);font-size:14px}
+.ctl{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.lbl{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg .chip[disabled]{opacity:.38;cursor:not-allowed;text-decoration:line-through}
+.stabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.stabs::-webkit-scrollbar{display:none}
+.stabs .chip{flex:0 0 auto;white-space:nowrap}
+.sub{display:flex;align-items:center;gap:10px;cursor:pointer;min-height:44px}
+.sub input{width:20px;height:20px;accent-color:var(--gold)}
+.tagline{display:flex;gap:4px;flex-wrap:wrap}
+a.chip{text-decoration:none;display:inline-flex;align-items:center}
